@@ -1,6 +1,9 @@
 #1 
-a = float(input('Введите делимое: '))
-b = float(input('Введите делитель: '))
+a = input('Введите делимое: ')
+b = input('Введите делитель: ')
+if not ((a.replace('.','').isdigit())) or not ((b.replace('.','').isdigit())):
+    print('Введите вещественные числа!')
+a,b = float(a),float(b)
 if b == 0:
     print('ДЕЛЕНИЕ НА НОЛЬ!!!')
 else:
@@ -8,7 +11,7 @@ else:
 
 
 #2
-summa = float(input('Введите сумму покупки: '))
+'''summa = float(input('Введите сумму покупки: '))
 sale = 0
 if summa > 20:
     summa *= 0.65
@@ -55,4 +58,4 @@ else:
         else:
             month = 'Ноябрь'
     print(f'Название месяца: {month}')
-    print(f'Время года: {season}')
+    print(f'Время года: {season}')'''
