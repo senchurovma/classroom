@@ -22,14 +22,14 @@ print(f'Количество элементов: {count}')
 A = [1, '2', 3, 4, '5', '!', 'FF', '5', '7!']
 result = 0
 alphabet = '!F'
-for i in A:
-    if type(i) is int:
-        result += i
+for m in A:
+    if type(m) is int:
+        result += m
     else:
-        str(i)
-        for j in i:
-            if j in alphabet:
+        str(m)
+        for n in m:
+            if n in alphabet:
                 continue
             else:
-                result += int(j)
+                result += int(n)
 print(result)
