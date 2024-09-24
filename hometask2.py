@@ -11,7 +11,7 @@ else:
 
 
 #2
-'''summa = float(input('Введите сумму покупки: '))
+summa = float(input('Введите сумму покупки: '))
 sale = 0
 if summa > 20:
     summa *= 0.65
@@ -58,4 +58,4 @@ else:
         else:
             month = 'Ноябрь'
     print(f'Название месяца: {month}')
-    print(f'Время года: {season}')'''
+    print(f'Время года: {season}')
