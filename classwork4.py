@@ -26,12 +26,49 @@ string = string.replace('.','')
 print(string,count)'''
 
 #4
-A = []
+'''A = []
 alf = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя.'
+count = -1
 for i in range(10):
     i = input('Заполни массив целыми числами: ')
     for j in i:
         if j in alf:
             print('Вводи целые числа! ')
+    i = int(i)
     A.append(i)
-    if i+1 <= len(A)
+for i in range(len(A)):
+    count += 1
+    if count <= 9:
+        if A[i] < 0 and A[i+1] < 0:
+            print(A[i],A[i+1])'''
+
+#5
+'''A = []
+alf = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя.'
+for i in range(int(input())):
+    i = input('Заполни массив целыми числами: ')
+    for j in i:
+        if j in alf:
+            print('Вводи целые числа! ')
+    i = int(i)
+    A.append(i)
+min = A[0]
+for i in range(len(A)):
+    if A[i] < min:
+        min = A[i]
+print(min)'''
+
+#6
+A = []
+alf = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя.'
+for i in range(8):
+    i = input('Заполни массив целыми числами: ')
+    for j in i:
+        if j in alf:
+            print('Вводи целые числа! ')
+    i = int(i)
+    A.append(i)
+for i in A:
+    if i < 15:
+        i *= 2
+print(A)
