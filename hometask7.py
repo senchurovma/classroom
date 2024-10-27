@@ -11,7 +11,7 @@ def read_last(lines, file):
 
 if n > 0 and n < rows_number:
     read_last(n, 'article.txt')
-    
+
 #2
 import os
 
@@ -37,3 +37,16 @@ def longest_words(file):
     return longest_words
 
 print(longest_words('article.txt'))
+
+#4
+def simple_text_editor():
+    file_name = input()
+    file_name += '.txt'
+    with open(file_name, 'w') as f:
+        while True:
+            line = input()
+            if line.strip() == '' or not line.isprintable():
+                break
+            f.write(line + '\n')
+            
+simple_text_editor()
