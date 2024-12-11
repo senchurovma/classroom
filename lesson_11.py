@@ -1,4 +1,4 @@
-# #1
+#1
 import pandas as pd
 
 file = 'C:/Users/mishk/Downloads/NISPUF17.csv'
