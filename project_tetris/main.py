@@ -2,16 +2,13 @@ import pygame
 import random
 import os
 
-# Инициализация
 pygame.init()
 
-# Константы
 WIDTH, HEIGHT = 300, 600
-ROWS, COLS = 20, 10
+ROWS, COLS = 20, 10 # 20 строк и 10 столбцов
 CELL_SIZE = WIDTH // COLS
 FPS = 60
 
-# Цвета
 BLACK = (0, 0, 0)
 GRAY = (128, 128, 128)
 WHITE = (255, 255, 255)
@@ -25,38 +22,32 @@ COLORS = [
     (255, 0, 0)     # Z
 ]
 
-# Фигуры
+# тетромино в виде матриц
 SHAPES = [
-    [[1, 1, 1, 1]], 
-    [[1, 0, 0], [1, 1, 1]], 
-    [[0, 0, 1], [1, 1, 1]], 
-    [[1, 1], [1, 1]], 
-    [[0, 1, 1], [1, 1, 0]], 
-    [[0, 1, 0], [1, 1, 1]], 
-    [[1, 1, 0], [0, 1, 1]]
+    [[1, 1, 1, 1]],         # I
+    [[1, 0, 0], [1, 1, 1]], # J
+    [[0, 0, 1], [1, 1, 1]], # L
+    [[1, 1], [1, 1]],       # O
+    [[0, 1, 1], [1, 1, 0]], # S
+    [[0, 1, 0], [1, 1, 1]], # T
+    [[1, 1, 0], [0, 1, 1]]  # Z
 ]
 
-# Экран
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("tetris")
-clock = pygame.time.Clock()
+clock = pygame.time.Clock() # для контроля фпс
 
-# Загрузка музыки
 pygame.mixer.music.load("C:/Users/mishk/Documents/vscode_inf/classroom/project_tetris/tetris_theme.ogg")
-pygame.mixer.music.play(-1)
+pygame.mixer.music.play(-1) # фоновая музыка проигрывается в цикле
 
-# Загрузка фона
 background = pygame.image.load("C:/Users/mishk/Documents/vscode_inf/classroom/project_tetris/background.jpg")
-background = pygame.transform.scale(background, (WIDTH, HEIGHT))  # Подгонка изображения под размер экрана
+background = pygame.transform.scale(background, (WIDTH, HEIGHT)) # подгоняем масштаб
 
-# Сетка
-grid = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+grid = [[0 for i in range(COLS)] for i in range(ROWS)] # заполняем двумерный список пустыми клетками
 
-# Счет
 score = 0
 font = pygame.font.Font("C:/Users/mishk/Documents/vscode_inf/classroom/project_tetris/alagard.ttf", 24)
 
-# Рекорд
 record_file = "highscore.txt"
 if not os.path.exists(record_file):
     with open(record_file, "w") as f:
@@ -65,40 +56,38 @@ if not os.path.exists(record_file):
 with open(record_file, "r") as f:
     highscore = int(f.read())
 
-# Класс фигуры
 class Tetromino:
     def __init__(self):
         self.shape = random.choice(SHAPES)
         self.color = random.choice(COLORS)
-        self.x = COLS // 2 - len(self.shape[0]) // 2
+        self.x = COLS // 2 - len(self.shape[0]) // 2 # от центра игрового поля отступаем на половину от ширины первой строчки фигуры (в клетках)
         self.y = 0
 
-    def rotate(self):
-        self.shape = [list(row) for row in zip(*self.shape[::-1])]
+    def rotate(self): # вращает фигуру на 90 градусов по часовой стрелке
+        self.shape = [list(row) for row in zip(*self.shape[::-1])] # отражаем матрицу по горизонтали, затем транспонируем и превращаем кортежи в списки
 
-    def valid(self, dx=0, dy=0):
+    def valid(self, dx=0, dy=0): # по умолчанию проверка выполяется для текущего положения фигуры
         for i, row in enumerate(self.shape):
             for j, cell in enumerate(row):
-                if cell:
-                    nx, ny = self.x + j + dx, self.y + i + dy
+                if cell: # i и j - смещение относительно верхнего левого угла фигуры
+                    nx, ny = self.x + j + dx, self.y + i + dy # новые координаты
                     if nx < 0 or nx >= COLS or ny >= ROWS or (ny >= 0 and grid[ny][nx]):
-                        return False
+                        return False # в этом случае перемещение или поворот невозможны
         return True
 
-    def place(self):
+    def place(self): # фиксируем фигуру в сетке
         for i, row in enumerate(self.shape):
             for j, cell in enumerate(row):
                 if cell:
                     grid[self.y + i][self.x + j] = self.color
 
-# Очистка линий
 def clear_lines():
     global grid, score, fall_speed, highscore
     lines_cleared = 0
-    grid = [row for row in grid if any(cell == 0 for cell in row) or not row.count(0) == 0]
-    while len(grid) < ROWS:
-        grid.insert(0, [0 for _ in range(COLS)])
-        lines_cleared += 1
+    grid = [row for row in grid if any(cell == 0 for cell in row) or not row.count(0) == 0] # в новую сетку попадают только незаполненные строки
+    while len(grid) < ROWS: # почистили, теперь добавляем новые строки сверху
+        grid.insert(0, [0 for i in range(COLS)]) # строка - список путсых ячеек
+        lines_cleared += 1 # награда
     score += lines_cleared * 100
 
     if score > highscore:
@@ -109,13 +98,12 @@ def clear_lines():
     if score > 0 and score % 500 == 0:
         fall_speed = max(0.1, fall_speed - 0.05)
 
-# Отрисовка
 def draw_grid():
     for y in range(ROWS):
         for x in range(COLS):
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-            color = grid[y][x] if grid[y][x] else GRAY
-            pygame.draw.rect(screen, color, rect, 0 if grid[y][x] else 1)
+            color = grid[y][x] if grid[y][x] else GRAY # если ячейка содержит цвет, его и используем
+            pygame.draw.rect(screen, color, rect, 0 if grid[y][x] else 1) # рисует прямоугольник на экране игры
 
 def draw_tetromino(tetromino):
     for i, row in enumerate(tetromino.shape):
@@ -125,21 +113,20 @@ def draw_tetromino(tetromino):
                 pygame.draw.rect(screen, tetromino.color, rect)
 
 def draw_score():
-    score_text = font.render(f"Score: {score}", True, WHITE)
-    screen.blit(score_text, (10, 10))
+    score_text = font.render(f"Score: {score}", True, WHITE) # true отвечает за сглаживание
+    screen.blit(score_text, (10, 10)) # рендеринг поверх основного экрана
     record_text = font.render(f"Highscore: {highscore}", True, WHITE)
     screen.blit(record_text, (10, 40))
 
-# Основной цикл
 fall_time = 0
 fall_speed = 0.5
 tetromino = Tetromino()
 running = True
-while running:
-    dt = clock.tick(FPS) / 1000
-    fall_time += dt
+while running: # основной игровой цикл
+    dt = clock.tick(FPS) / 1000 # ограничиваем фпс
+    fall_time += dt # dt - время, прошедшее с предыдущего кадра
 
-    for event in pygame.event.get():
+    for event in pygame.event.get(): # обработка событий
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
@@ -150,12 +137,12 @@ while running:
             elif event.key == pygame.K_DOWN and tetromino.valid(dy=1):
                 tetromino.y += 1
             elif event.key == pygame.K_UP:
-                old_shape = tetromino.shape.copy()
+                previous_shape = tetromino.shape.copy() # на случай, если поворот невозможен
                 tetromino.rotate()
                 if not tetromino.valid():
-                    tetromino.shape = old_shape
+                    tetromino.shape = previous_shape
 
-    if fall_time > fall_speed:
+    if fall_time > fall_speed: # падение фигуры за счет перемещения на клетку вниз
         if tetromino.valid(dy=1):
             tetromino.y += 1
         else:
@@ -167,12 +154,11 @@ while running:
                 running = False
         fall_time = 0
 
-    screen.fill(BLACK)  # Очистка экрана
-    screen.blit(background, (0, 0))  # Отображение фона
+    screen.fill(BLACK)
+    screen.blit(background, (0, 0))
     draw_grid()
     draw_tetromino(tetromino)
     draw_score()
     pygame.display.flip()
 
 pygame.quit()
-
