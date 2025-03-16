@@ -27,30 +27,34 @@ COLORS = [
 
 # Фигуры
 SHAPES = [
-    [[1, 1, 1, 1]],
-    [[1, 0, 0], [1, 1, 1]],
-    [[0, 0, 1], [1, 1, 1]],
-    [[1, 1], [1, 1]],
-    [[0, 1, 1], [1, 1, 0]],
-    [[0, 1, 0], [1, 1, 1]],
+    [[1, 1, 1, 1]], 
+    [[1, 0, 0], [1, 1, 1]], 
+    [[0, 0, 1], [1, 1, 1]], 
+    [[1, 1], [1, 1]], 
+    [[0, 1, 1], [1, 1, 0]], 
+    [[0, 1, 0], [1, 1, 1]], 
     [[1, 1, 0], [0, 1, 1]]
 ]
 
 # Экран
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Tetris")
+pygame.display.set_caption("tetris")
 clock = pygame.time.Clock()
 
 # Загрузка музыки
-pygame.mixer.music.load("tetris_theme.ogg")
+pygame.mixer.music.load("C:/Users/mishk/Documents/vscode_inf/classroom/project_tetris/tetris_theme.ogg")
 pygame.mixer.music.play(-1)
+
+# Загрузка фона
+background = pygame.image.load("C:/Users/mishk/Documents/vscode_inf/classroom/project_tetris/background.jpg")
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))  # Подгонка изображения под размер экрана
 
 # Сетка
 grid = [[0 for _ in range(COLS)] for _ in range(ROWS)]
 
 # Счет
 score = 0
-font = pygame.font.SysFont("Arial", 24)
+font = pygame.font.Font("C:/Users/mishk/Documents/vscode_inf/classroom/project_tetris/alagard.ttf", 24)
 
 # Рекорд
 record_file = "highscore.txt"
@@ -159,14 +163,16 @@ while running:
             clear_lines()
             tetromino = Tetromino()
             if not tetromino.valid():
-                print("Game Over")
+                print("Конец игры")
                 running = False
         fall_time = 0
 
-    screen.fill(BLACK)
+    screen.fill(BLACK)  # Очистка экрана
+    screen.blit(background, (0, 0))  # Отображение фона
     draw_grid()
     draw_tetromino(tetromino)
     draw_score()
     pygame.display.flip()
 
 pygame.quit()
+
