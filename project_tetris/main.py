@@ -84,7 +84,7 @@ class Tetromino:
 def clear_lines():
     global grid, score, fall_speed, highscore
     lines_cleared = 0
-    grid = [row for row in grid if any(cell == 0 for cell in row) or not row.count(0) == 0] # в новую сетку попадают только незаполненные строки
+    grid = [row for row in grid if any(cell == 0 for cell in row)] # в новую сетку попадают только незаполненные строки,  or not row.count(0) == 0
     while len(grid) < ROWS: # почистили, теперь добавляем новые строки сверху
         grid.insert(0, [0 for i in range(COLS)]) # строка - список путсых ячеек
         lines_cleared += 1 # награда
